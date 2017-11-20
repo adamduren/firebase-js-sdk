@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import firebase, { FirebaseApp, FirebaseServiceFactory } from '@firebase/app';
+import firebase, { FirebaseApp } from '@firebase/app';
 import { StringFormat } from './src/implementation/string';
 import { TaskEvent } from './src/implementation/taskenums';
 import { TaskState } from './src/implementation/taskenums';
@@ -42,7 +42,7 @@ export function registerStorage(instance) {
   };
   instance.INTERNAL.registerService(
     STORAGE_TYPE,
-    factory as FirebaseServiceFactory,
+    factory,
     namespaceExports,
     undefined,
     // Allow multiple storage instances per app.

@@ -23,6 +23,7 @@ import * as RequestExports from './implementation/request';
 import { Request } from './implementation/request';
 import { XhrIoPool } from './implementation/xhriopool';
 import { Reference } from './reference';
+import { FirebaseStorage } from "@firebase/storage-types";
 
 /**
  * A service that provides firebaseStorage.Reference instances.
@@ -30,7 +31,7 @@ import { Reference } from './reference';
  *
  * @struct
  */
-export class Service {
+export class Service implements FirebaseStorage {
   authWrapper_: AuthWrapper;
   private app_: FirebaseApp;
   private bucket_: Location | null = null;
