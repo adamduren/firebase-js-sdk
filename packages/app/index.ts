@@ -14,16 +14,10 @@
  * limitations under the License.
  */
 
-import { createFirebaseNamespace, FirebaseNamespace } from './src/firebaseApp';
+import { FirebaseNamespace } from "@firebase/app-types";
+import { createFirebaseNamespace } from './src/firebaseApp';
 
-export {
-  FirebaseApp,
-  FirebaseAuthTokenData,
-  FirebaseNamespace,
-  FirebaseService,
-  FirebaseServiceFactory,
-  FirebaseServiceNamespace
-} from './src/firebaseApp';
+export * from '@firebase/app-types';
 
 export const firebase = createFirebaseNamespace();
 

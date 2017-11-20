@@ -15,17 +15,18 @@
  */
 import {
   createFirebaseNamespace,
-  FirebaseNamespace,
-  FirebaseApp,
-  FirebaseService
+  FirebaseService,
+  _FirebaseNamespace,
+  _FirebaseApp
 } from '../src/firebaseApp';
+import { FirebaseApp } from "@firebase/app-types";
 import { assert } from 'chai';
 
 describe('Firebase App Class', () => {
-  let firebase: FirebaseNamespace;
+  let firebase: _FirebaseNamespace;
 
   beforeEach(() => {
-    firebase = createFirebaseNamespace();
+    firebase = createFirebaseNamespace() as any;
   });
 
   it('No initial apps.', () => {
@@ -351,10 +352,10 @@ describe('Firebase App Class', () => {
     (app2 as any).test();
     // Confirm extended INTERNAL getToken resolve with the corresponding
     // service's value.
-    return app.INTERNAL.getToken()
+    return (app as _FirebaseApp).INTERNAL.getToken()
       .then(token => {
         assert.equal('tokenFor0', token.accessToken);
-        return app2.INTERNAL.getToken();
+        return (app2 as _FirebaseApp).INTERNAL.getToken();
       })
       .then(token => {
         assert.equal('tokenFor1', token.accessToken);
