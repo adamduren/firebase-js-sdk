@@ -1,0 +1,16 @@
+{
+  "name": "@firebase/messaging-types",
+  "version": "0.1.0",
+  "description": "@firebase/messaging Types",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@firebase/app-types": "^0.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/firebase/firebase-js-sdk/tree/master/packages/messaging-types"
+  },
+  "bugs": {
+    "url": "https://github.com/firebase/firebase-js-sdk/issues"
+  }
+}

@@ -20,17 +20,29 @@ import Errors from '../models/errors';
 import WorkerPageMessage from '../models/worker-page-message';
 import DefaultSW from '../models/default-sw';
 import NOTIFICATION_PERMISSION from '../models/notification-permission';
-import { createSubscribe } from '@firebase/util';
+import { createSubscribe, Observer } from '@firebase/util';
+import { FirebaseMessaging } from "@firebase/messaging-types";
 
 declare const firebase: any;
 
-export default class WindowController extends ControllerInterface {
+export default class WindowController extends ControllerInterface implements FirebaseMessaging {
   private registrationToUse_;
   private manifestCheckPromise_;
-  private messageObserver_;
-  private onMessage_;
-  private tokenRefreshObserver_;
-  private onTokenRefresh_;
+
+  private messageObserver_ = null;
+  
+  private onMessage_ = createSubscribe(observer => {
+    this.messageObserver_ = observer;
+  });
+
+  private tokenRefreshObserver_ = null;
+  /**
+   * @private {!firebase.Subscribe} The subscribe function to the onMessage
+   * observer.
+   */
+  private onTokenRefresh_= createSubscribe(observer => {
+    this.tokenRefreshObserver_ = observer;
+  });
 
   /**
    * A service that provides a MessagingService instance.
@@ -38,41 +50,6 @@ export default class WindowController extends ControllerInterface {
    */
   constructor(app) {
     super(app);
-
-    /**
-     * @private
-     * @type {ServiceWorkerRegistration}
-     */
-    this.registrationToUse_;
-
-    /**
-     * @private
-     * @type {Promise}
-     */
-    this.manifestCheckPromise_;
-
-    /**
-     * @private
-     * @type {firebase.Observer}
-     */
-    this.messageObserver_ = null;
-    /**
-     * @private {!firebase.Subscribe} The subscribe function to the onMessage
-     * observer.
-     */
-    this.onMessage_ = createSubscribe(observer => {
-      this.messageObserver_ = observer;
-    });
-
-    /**
-     * @private
-     * @type {firebase.Observer}
-     */
-    this.tokenRefreshObserver_ = null;
-    this.onTokenRefresh_ = createSubscribe(observer => {
-      this.tokenRefreshObserver_ = observer;
-    });
-
     this.setupSWMessageListener_();
   }
 

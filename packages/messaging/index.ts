@@ -17,7 +17,7 @@
 
 import WindowController from './src/controllers/window-controller';
 import SWController from './src/controllers/sw-controller';
-import firebase from '@firebase/app';
+import { firebase } from '@firebase/app';
 
 export function registerMessaging(instance) {
   const messagingName = 'messaging';
