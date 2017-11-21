@@ -21,7 +21,12 @@ export interface FirebaseMessaging {
 
 declare module '@firebase/app-types' {
   interface FirebaseNamespace {
-    messaging?(app?: FirebaseApp): FirebaseMessaging;
+    messaging?: {
+      (app?: FirebaseApp): FirebaseMessaging;
+      Messaging: {
+        new(): FirebaseMessaging
+      }
+    }
   }
   interface FirebaseApp {
     messaging?(): FirebaseMessaging;

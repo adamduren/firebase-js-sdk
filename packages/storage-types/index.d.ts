@@ -1,7 +1,7 @@
 import { Observer, Unsubscribe } from "@firebase/util";
 import { FirebaseApp, FirebaseNamespace } from "@firebase/app-types";
 
-interface StorageSettableMetadata {
+interface Metadata {
   cacheControl?: string | null;
   contentDisposition?: string | null;
   contentEncoding?: string | null;
@@ -16,13 +16,13 @@ export interface FirebaseStorage {
   app: FirebaseApp;
   maxOperationRetryTime: number;
   maxUploadRetryTime: number;
-  ref(path?: string): StorageReference;
-  refFromURL(url: string): StorageReference;
+  ref(path?: string): Reference;
+  refFromURL(url: string): Reference;
   setMaxOperationRetryTime(time: number): any;
   setMaxUploadRetryTime(time: number): any;
 }
 
-export interface StorageFullMetadata extends StorageUploadMetadata {
+export interface FullMetadata extends UploadMetadata {
   bucket: string;
   downloadURLs: string[];
   fullPath: string;
@@ -34,31 +34,31 @@ export interface StorageFullMetadata extends StorageUploadMetadata {
   updated: string;
 }
 
-export interface StorageReference {
+export interface Reference {
   bucket: string;
-  child(path: string): StorageReference;
+  child(path: string): Reference;
   delete(): Promise<any>;
   fullPath: string;
   getDownloadURL(): Promise<any>;
   getMetadata(): Promise<any>;
   name: string;
-  parent: StorageReference | null;
+  parent: Reference | null;
   put(
     data: any | any | any,
-    metadata?: StorageUploadMetadata
-  ): StorageUploadTask;
+    metadata?: UploadMetadata
+  ): UploadTask;
   putString(
     data: string,
     format?: StringFormat,
-    metadata?: StorageUploadMetadata
-  ): StorageUploadTask;
-  root: StorageReference;
+    metadata?: UploadMetadata
+  ): UploadTask;
+  root: Reference;
   storage: FirebaseStorage;
   toString(): string;
-  updateMetadata(metadata: StorageSettableMetadata): Promise<any>;
+  updateMetadata(metadata: Metadata): Promise<any>;
 }
 
-export interface StorageSettableMetadata {
+export interface Metadata {
   cacheControl?: string | null;
   contentDisposition?: string | null;
   contentEncoding?: string | null;
@@ -77,29 +77,29 @@ declare var StringFormat: {
   RAW: StringFormat;
 };
 
-type StorageTaskEvent = string;
-declare var StorageTaskEvent: {
-  STATE_CHANGED: StorageTaskEvent;
+type TaskEvent = string;
+declare var TaskEvent: {
+  STATE_CHANGED: TaskEvent;
 };
 
-type StorageTaskState = string;
-declare var StorageTaskState: {
-  CANCELED: StorageTaskState;
-  ERROR: StorageTaskState;
-  PAUSED: StorageTaskState;
-  RUNNING: StorageTaskState;
-  SUCCESS: StorageTaskState;
+type TaskState = string;
+declare var TaskState: {
+  CANCELED: TaskState;
+  ERROR: TaskState;
+  PAUSED: TaskState;
+  RUNNING: TaskState;
+  SUCCESS: TaskState;
 };
 
-export interface StorageUploadMetadata extends StorageSettableMetadata {
+export interface UploadMetadata extends Metadata {
   md5Hash?: string | null;
 }
 
-export interface StorageUploadTask {
+export interface UploadTask {
   cancel(): boolean;
   catch(onRejected: (a: Error) => any): Promise<any>;
   on(
-    event: StorageTaskEvent,
+    event: TaskEvent,
     nextOrObserver?:
       | Observer<any, any>
       | null
@@ -109,26 +109,31 @@ export interface StorageUploadTask {
   ): Function;
   pause(): boolean;
   resume(): boolean;
-  snapshot: StorageUploadTaskSnapshot;
+  snapshot: UploadTaskSnapshot;
   then(
-    onFulfilled?: ((a: StorageUploadTaskSnapshot) => any) | null,
+    onFulfilled?: ((a: UploadTaskSnapshot) => any) | null,
     onRejected?: ((a: Error) => any) | null
   ): Promise<any>;
 }
 
-export interface StorageUploadTaskSnapshot {
+export interface UploadTaskSnapshot {
   bytesTransferred: number;
   downloadURL: string | null;
-  metadata: StorageFullMetadata;
-  ref: StorageReference;
-  state: StorageTaskState;
-  task: StorageUploadTask;
+  metadata: FullMetadata;
+  ref: Reference;
+  state: TaskState;
+  task: UploadTask;
   totalBytes: number;
 }
 
 declare module '@firebase/app-types' {
   interface FirebaseNamespace {
-    storage?(app?: FirebaseApp): FirebaseStorage;
+    storage?: {
+      (app?: FirebaseApp): FirebaseStorage;
+      Storage: {
+        new(): FirebaseStorage
+      }
+    }
   }
   interface FirebaseApp {
     storage?(url?: string): FirebaseStorage;
